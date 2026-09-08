@@ -1,0 +1,14 @@
+﻿Cat/Library
+Cat/Logs
+Cat/Temp
+Cat/UserSettings
+*.sln
+*.csproj
+*.user
+*.obj
+*.ideas
+*.vscode
+*.vs
+
+*.user
+*.userprefs

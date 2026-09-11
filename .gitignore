@@ -12,3 +12,7 @@ Cat/UserSettings
 
 *.user
 *.userprefs
+Library
+Logs
+Temp
+UserSettings

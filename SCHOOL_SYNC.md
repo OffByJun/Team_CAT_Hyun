@@ -18,7 +18,7 @@ Info[] others = server.GetPos();
 GridMap map = MapCatalog.Default;
 ```
 
-위치는 직접 계산한다. 상대 ID별 생성·갱신·제거와 맵 생성·충돌은 학생이 구현한다. OnDestroy에서 `server?.Dispose()`를 호출한다. API 상세는 `Cat/Assets/Plugins/SchoolSync/API.md`에 있다. 내장 맵은 64×16 연습 맵이며 정확한 마리오 1-1 복제가 아니다.
+위치는 직접 계산한다. 상대 ID별 생성·갱신·제거와 맵 생성·충돌은 학생이 구현한다. OnDestroy에서 `server?.Dispose()`를 호출한다. API 상세는 `Cat/Assets/Plugins/SchoolSync/API.md`에 있다. 내장 맵은 원작 World 1-1 이미지에서 추출한 지상·지하 그리드다.
 
 ## 버전 약속
 

@@ -1,0 +1,4 @@
+[submodule "Cat/Assets/Plugins/SchoolSync"]
+	path = Cat/Assets/Plugins/SchoolSync
+	url = https://github.com/sdh-hyun/after-school.git
+	branch = codex/school-sync-dist

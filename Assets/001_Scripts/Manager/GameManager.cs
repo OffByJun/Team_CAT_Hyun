@@ -2,6 +2,14 @@
 {
     public class GameManager
     {
-        
+        public void StopGame()
+        {
+            
+        }
+
+        public void StartGame()
+        {
+            
+        }
     }
 }

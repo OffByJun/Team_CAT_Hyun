@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>School.PositionSync</name>
+    </assembly>
+    <members>
+        <member name="T:School.PositionSync.TileKind">
+            <summary>그리드 셀의 표시 종류. DLL은 오브젝트 생성이나 충돌 계산을 하지 않습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Empty">
+            <summary>빈 공간.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Ground">
+            <summary>바닥.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Brick">
+            <summary>일반 블록. 기본 맵에서는 파괴하지 않습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Question">
+            <summary>물음표 모양 블록. 보상 기능은 포함하지 않습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Pipe">
+            <summary>파이프를 구성하는 한 칸.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Stair">
+            <summary>계단을 구성하는 한 칸.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.HiddenOneUpBlock">
+            <summary>숨겨진 1UP 블록. 활성화 동작은 학생이 구현합니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Flag">
+            <summary>깃대·깃발 표시 셀. 충돌하지 않습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Castle">
+            <summary>성 장식 셀. 충돌하지 않습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.Coin">
+            <summary>지하 방 코인. 수집 처리는 학생이 구현합니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.BlockContent">
+            <summary>원본 맵의 블록 내용물 데이터. 보상·변형 동작은 포함하지 않습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.BlockContent.None">
+            <summary>내용물 없음.</summary>
+        </member>
+        <member name="F:School.PositionSync.BlockContent.Coin">
+            <summary>코인 한 개.</summary>
+        </member>
+        <member name="F:School.PositionSync.BlockContent.MushroomOrFlower">
+            <summary>버섯 또는 현재 성장 상태에 따른 파이어플라워.</summary>
+        </member>
+        <member name="F:School.PositionSync.BlockContent.MultipleCoins">
+            <summary>여러 번 코인을 얻는 블록.</summary>
+        </member>
+        <member name="F:School.PositionSync.BlockContent.Star">
+            <summary>스타.</summary>
+        </member>
+        <member name="F:School.PositionSync.BlockContent.OneUp">
+            <summary>1UP 버섯.</summary>
+        </member>
+        <member name="T:School.PositionSync.GridPoint">
+            <summary>읽기 전용 정수 그리드 좌표.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridPoint.X">
+            <summary>오른쪽으로 증가하는 열.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridPoint.Y">
+            <summary>위로 증가하는 행.</summary>
+        </member>
+        <member name="T:School.PositionSync.GridCell">
+            <summary>비어 있지 않은 셀 하나. ID는 Y * Width + X이며 맵 안에서 고유합니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridCell.Id">
+            <summary>맵 버전 내 고유 ID.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridCell.X">
+            <summary>열.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridCell.Y">
+            <summary>행.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridCell.Kind">
+            <summary>시각 표현 종류.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridCell.Content">
+            <summary>블록 내용물. 학생이 별도로 동작을 구현할 때 사용하는 데이터입니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridCell.IsSolid">
+            <summary>학생이 충돌 영역을 생성할 때 사용할 정적 데이터입니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.GridMap">
+            <summary>공통 맵 데이터. 접속 없이 조회 가능하며 이동·충돌·진행 로직은 없습니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Id">
+            <summary>원작 NES 슈퍼 마리오 브라더스 World 1-1의 맵 이미지에서 추출한 그리드 식별자.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Version">
+            <summary>배치 버전. 팀 전체가 같은 버전을 사용하세요.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Width">
+            <summary>전체 열 수.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Height">
+            <summary>전체 행 수.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.CellSize">
+            <summary>한 칸의 월드 크기.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.OriginX">
+            <summary>월드 원점 X.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.OriginY">
+            <summary>월드 원점 Y.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Spawn">
+            <summary>시작 지점의 빈 셀. 캐릭터 발 위치는 이 셀의 아래쪽 중앙입니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Goal">
+            <summary>도착 판정 셀. 지상은 깃대, 지하는 출구 파이프이며 전환·판정은 학생이 구현합니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.FallBoundaryY">
+            <summary>권장 추락 판정 Y. 실제 판정·부활은 학생이 구현합니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.Cells">
+            <summary>비어 있지 않은 셀 목록. 읽기 전용이며 오프라인에서도 동일합니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.GridMap.GetTile(System.Int32,System.Int32)">
+            <summary>셀 종류를 반환합니다. 맵 밖의 좌표는 예외를 발생시킵니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.GridMap.GetCellCenter(System.Int32,System.Int32)">
+            <summary>셀 중심의 월드 좌표를 반환합니다. Z는 0입니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.GridMap.SpawnFeet">
+            <summary>시작 지점의 발 기준 월드 좌표. 중심 피벗 캐릭터는 반높이를 더하세요.</summary>
+        </member>
+        <member name="T:School.PositionSync.MapCatalog">
+            <summary>DLL에 포함된 읽기 전용 맵 카탈로그.</summary>
+        </member>
+        <member name="P:School.PositionSync.MapCatalog.Default">
+            <summary>원작 World 1-1 지상 그리드. 네트워크 연결이 필요하지 않습니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.MapCatalog.World11Underground">
+            <summary>World 1-1 지하 보너스 방 그리드. 입장은 지상 파이프 (57,5), 복귀는 (163,4) 발 좌표 기준입니다. 전환 동작은 포함하지 않습니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.Info">
+            <summary>플레이어 ID와 위치. 보낼 때 Id는 무시되며 서버가 연결별로 지정합니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.Info.Id">
+            <summary>상대 캐릭터를 구분하는 ID. 생성/제거의 기준이며 재접속 시 바뀝니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.Info.X">
+            <summary>X 좌표.</summary>
+        </member>
+        <member name="P:School.PositionSync.Info.Y">
+            <summary>Y 좌표.</summary>
+        </member>
+        <member name="P:School.PositionSync.Info.Z">
+            <summary>Z 좌표.</summary>
+        </member>
+        <member name="M:School.PositionSync.Info.#ctor(System.Single,System.Single,System.Single)">
+            <summary>전송할 위치를 만듭니다. 2D는 Z를 생략하세요.</summary>
+        </member>
+        <member name="T:School.PositionSync.Server">
+            <summary>
+            위치 동기화 연결 창구. 생성하면 자동 접속하고 SetPos/GetPos로 사용합니다.
+            이름은 Server지만 서버 프로그램을 실행하는 것이 아닌 클라이언트용 객체입니다.
+            </summary>
+        </member>
+        <member name="F:School.PositionSync.Server.DefaultHost">
+            <summary>교사 온라인 서버 주소.</summary>
+        </member>
+        <member name="M:School.PositionSync.Server.#ctor">
+            <summary>교사 온라인 서버에 자동 접속합니다. Unity 메인 스레드를 막지 않습니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.Server.#ctor(System.String,System.Int32)">
+            <summary>지정한 서버에 자동 접속합니다. 로컬 테스트는 host에 127.0.0.1을 넣으세요.</summary>
+        </member>
+        <member name="M:School.PositionSync.Server.SetPos(School.PositionSync.Info)">
+            <summary>내 최신 위치를 저장합니다. 실제 전송은 자동입니다. 접속 중에도 호출할 수 있습니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.Server.GetPos">
+            <summary>
+            나를 제외한 상대 ID·위치 배열을 반환합니다. 연결 중 또는 상대가 없으면 빈 배열입니다.
+            최신 목록에 없는 ID의 오브젝트는 학생 코드에서 제거하세요.
+            연결 실패·단절 시 InvalidOperationException이 발생합니다.
+            </summary>
+        </member>
+        <member name="M:School.PositionSync.Server.Dispose">
+            <summary>Unity OnDestroy에서 연결을 종료하세요. 재접속은 새 Server를 생성합니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.ConnectionStatus">
+            <summary>연결 상태. 재접속할 때는 새 SyncClient를 생성하세요.</summary>
+        </member>
+        <member name="F:School.PositionSync.ConnectionStatus.Disconnected">
+            <summary>아직 연결하지 않았습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.ConnectionStatus.Connecting">
+            <summary>서버에 연결 중입니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.ConnectionStatus.Connected">
+            <summary>위치를 송수신하고 있습니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.ConnectionStatus.Faulted">
+            <summary>연결 실패 또는 통신 오류입니다. LastError를 확인하세요.</summary>
+        </member>
+        <member name="F:School.PositionSync.ConnectionStatus.Disposed">
+            <summary>Dispose로 종료했습니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.PlayerPosition">
+            <summary>서버에서 받은 좌표입니다. Unity 타입에 의존하지 않습니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.PlayerPosition.X">
+            <summary>X 좌표.</summary>
+        </member>
+        <member name="P:School.PositionSync.PlayerPosition.Y">
+            <summary>Y 좌표.</summary>
+        </member>
+        <member name="P:School.PositionSync.PlayerPosition.Z">
+            <summary>Z 좌표.</summary>
+        </member>
+        <member name="T:School.PositionSync.SyncClient">
+            <summary>
+            내 위치를 서버로 전송하고 상대 위치 목록을 제공합니다.
+            이동, 충돌, GameObject 생성, 예측, 보간은 수행하지 않습니다.
+            </summary>
+        </member>
+        <member name="F:School.PositionSync.SyncClient.DefaultPort">
+            <summary>기본 TCP 포트.</summary>
+        </member>
+        <member name="F:School.PositionSync.SyncClient.SendIntervalMilliseconds">
+            <summary>위치 전송 간격(밀리초). 50ms = 초당 20회.</summary>
+        </member>
+        <member name="P:School.PositionSync.SyncClient.Status">
+            <summary>현재 연결 상태.</summary>
+        </member>
+        <member name="P:School.PositionSync.SyncClient.LocalPlayerId">
+            <summary>연결 완료 시 서버가 부여한 ID. 연결 전에는 0.</summary>
+        </member>
+        <member name="P:School.PositionSync.SyncClient.LastError">
+            <summary>마지막 오류 메시지. 오류가 없으면 빈 문자열.</summary>
+        </member>
+        <member name="P:School.PositionSync.SyncClient.RemotePlayers">
+            <summary>
+            나를 제외한 최신 상대 위치 스냅샷. 키는 플레이어 ID입니다.
+            스냅샷은 읽기 전용이며 순회 중 변경되지 않습니다. 매 프레임 새로 읽으세요.
+            입장하면 ID가 추가되고 퇴장하면 다음 스냅샷에서 사라집니다.
+            </summary>
+        </member>
+        <member name="M:School.PositionSync.SyncClient.SetLocalPosition(System.Single,System.Single,System.Single)">
+            <summary>최신 로컬 좌표를 저장합니다. 연결 전 시작 좌표도 설정하세요. 실제 전송은 백그라운드에서 수행합니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.SyncClient.ConnectAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            서버에 비동기로 접속합니다. Unity에서 await로 호출하고 예외를 처리하세요.
+            한 인스턴스당 한 번만 호출할 수 있습니다. 연결과 응답 모두 timeoutMilliseconds로 제한합니다.
+            </summary>
+        </member>
+        <member name="M:School.PositionSync.SyncClient.Dispose">
+            <summary>통신을 종료합니다. Unity의 OnDestroy 등에서 호출하세요. 여러 번 호출해도 안전합니다.</summary>
+        </member>
+    </members>
+</doc>

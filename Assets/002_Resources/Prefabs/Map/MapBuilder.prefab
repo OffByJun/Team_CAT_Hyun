@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 400000}
+  - component: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: MapBuilder
+  m_TagString: Untagged
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc494b03aa4d149889fa88026da7cd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  buildOnStart: 1
+  useUndergroundMap: 0
+  showHiddenBlocks: 0
+  generatedMapRoot: {fileID: 0}
+  groundPrefab: {fileID: 100000, guid: 52d3c3b7a69b461ea3fb143980f26c31, type: 3}
+  brickPrefab: {fileID: 100000, guid: e58ce37937fa42e4b679de6d877e145a, type: 3}
+  questionPrefab: {fileID: 100000, guid: 4e5122798dce4623889b26ad62b5d237, type: 3}
+  pipePrefab: {fileID: 100000, guid: 86b70b6687944763b4dd78390cdfb7af, type: 3}
+  stairPrefab: {fileID: 100000, guid: 19fbffead4a841eca3278db25525e71a, type: 3}
+  hiddenOneUpBlockPrefab: {fileID: 100000, guid: c426a7ac25944aa482ca4b93588b6a59, type: 3}
+  flagPrefab: {fileID: 100000, guid: 97d4f57e98b941f7b7cf6ca78d4189cd, type: 3}
+  castlePrefab: {fileID: 100000, guid: fc4ee1296ff54320aaf002e8ce4cc384, type: 3}
+  coinPrefab: {fileID: 100000, guid: f8c3d99f7c2c48bd9e894ff7acf0d3ce, type: 3}

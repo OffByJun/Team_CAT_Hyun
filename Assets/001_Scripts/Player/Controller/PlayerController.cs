@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using _001_Scripts.Manager;
 using _001_Scripts.Player.Interface;
 using _001_Scripts.Player.Type;
@@ -20,11 +21,17 @@ namespace _001_Scripts.Player.Controller
 
         #endregion
 
-        private Vector2 moveVec;
+        private Vector2 _moveVec;
 
-        public void TryDmg(float dmg)
+        public void TakeDmg(float dmg)
         {
-            
+            playerHP -= dmg;
+
+            if (playerHP <= 0)
+            {
+                PlayerState = PlayerState.Dead;
+                GameManager.instance.StopGame();
+            }
         }
 
         public Vector2 GetPos()
@@ -52,13 +59,13 @@ namespace _001_Scripts.Player.Controller
         {
             _rb.linearVelocity =
                 new Vector2(
-                    moveVec.x *
+                    _moveVec.x *
                     playerSpeed,
                     _rb.linearVelocity.y);
         }
 
         public void Move(Vector2 ctx)
-            => moveVec = ctx;
+            => _moveVec = ctx;
 
         public void Jump()
             => _rb.AddForce(new Vector2(0f, playerJumpPower), ForceMode2D.Impulse);

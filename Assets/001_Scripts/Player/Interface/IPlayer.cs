@@ -7,7 +7,7 @@ namespace _001_Scripts.Player.Interface
     {
         PlayerState PlayerState { get; }
         
-        void TryDmg(float dmg);
+        void TakeDmg(float dmg);
         
         Vector2 GetPos();
     }

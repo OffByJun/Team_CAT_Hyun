@@ -1,4 +1,0 @@
-*.dll binary
-*.xml text eol=lf
-*.md text eol=lf
-*.meta text eol=lf

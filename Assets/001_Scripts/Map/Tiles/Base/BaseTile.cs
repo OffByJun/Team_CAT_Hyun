@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BaseTile : MonoBehaviour
+public abstract class BaseTile : GameBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

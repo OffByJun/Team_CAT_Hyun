@@ -1,14 +1,15 @@
 ﻿using System;
 using _001_Scripts.Manager;
+using _001_Scripts.Player.Interface;
 using _001_Scripts.Player.Type;
 using UnityEngine;
 
 namespace _001_Scripts.Player.Controller
 {
-    public sealed class PlayerController : GameBehaviour
+    public sealed class PlayerController : GameBehaviour, IPlayer
     {
         private Rigidbody2D _rb;
-        private PlayerState _playerState;
+        public PlayerState PlayerState { get; private set; }
 
         #region PlayerStat
 
@@ -20,6 +21,14 @@ namespace _001_Scripts.Player.Controller
         #endregion
 
         private Vector2 moveVec;
+
+        public void TryDmg(float dmg)
+        {
+            
+        }
+
+        public Vector2 GetPos()
+            => _rb.position;
 
         private void Awake()
         {
@@ -36,7 +45,7 @@ namespace _001_Scripts.Player.Controller
 
         public void Die()
         {
-            _playerState = PlayerState.Dead;
+            PlayerState = PlayerState.Dead;
         }
 
         private void FixedUpdate()

@@ -1,4 +1,5 @@
 using _001_Scripts.Player.Type;
+using UnityEngine;
 
 namespace _001_Scripts.Player.Interface
 {
@@ -7,6 +8,7 @@ namespace _001_Scripts.Player.Interface
         PlayerState PlayerState { get; }
         
         void TryDmg(float dmg);
-        int[][] GetPos();
+        
+        Vector2 GetPos();
     }
 }

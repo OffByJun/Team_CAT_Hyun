@@ -1,6 +1,8 @@
-﻿namespace _001_Scripts.Manager
+﻿using _001_Scripts.Manager.Base;
+
+namespace _001_Scripts.Manager
 {
-    public class GameManager
+    public class GameManager : SinManagerBase<GameManager>
     {
         public void StopGame()
         {

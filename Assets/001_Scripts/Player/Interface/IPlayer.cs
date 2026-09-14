@@ -9,6 +9,6 @@ namespace _001_Scripts.Player.Interface
         
         void TakeDmg(float dmg);
         
-        Vector2 GetPos();
+        Vector2 GetVector2();
     }
 }

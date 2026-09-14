@@ -29,12 +29,11 @@ namespace _001_Scripts.Player.Controller
 
             if (playerHP <= 0)
             {
-                PlayerState = PlayerState.Dead;
-                GameManager.instance.StopGame();
+                Die();
             }
         }
 
-        public Vector2 GetPos()
+        public Vector2 GetVector2()
             => _rb.position;
 
         private void Awake()
@@ -42,17 +41,10 @@ namespace _001_Scripts.Player.Controller
             _rb = GetComponent<Rigidbody2D>();
         }
 
-        public void OnDamage(float dmg)
-        {
-            playerHP -= dmg;
-
-            if (playerHP <= 0)
-                Die();
-        }
-
         public void Die()
         {
             PlayerState = PlayerState.Dead;
+            GameManager.instance.StopGame();
         }
 
         private void FixedUpdate()

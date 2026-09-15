@@ -12,13 +12,15 @@ namespace _001_Scripts.UI.Panels
         [SerializeField] private Score score;
         [SerializeField] private Time time;
         [SerializeField] private World world;
-        
+        [SerializeField] private Goal goal;
+
         private void Update()
         {
             coin.UpdateInfo(GameManager.instance.GetCoin());
             score.UpdateInfo(GameManager.instance.GetScore());
             time.UpdateInfo(GameManager.instance.GetTime());
             // world.UpdateInfo(MapManager.instance.GetMapId();
+            goal.UpdateInfo(GameManager.instance.GetIsArrived());
         }
     }
 }

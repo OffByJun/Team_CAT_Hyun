@@ -10,6 +10,7 @@ namespace _001_Scripts.Manager
         private float gTime = 0;
         private int Coin = 0;
         private int Score = 0;
+        private bool isArrived = false;
 
         [SerializeField] private Transform spawnPoint;
 
@@ -17,6 +18,7 @@ namespace _001_Scripts.Manager
         public int GetCoin() => Coin;
         public int GetScore() => Score;
         public Transform GetSpawnPoint() => spawnPoint;
+        public bool GetIsArrived() => isArrived;
 
         private void Update()
         {
@@ -25,12 +27,18 @@ namespace _001_Scripts.Manager
         
         public void StopGame()
         {
-            
+
         }
 
         public void StartGame()
         {
-            
+
+        }
+
+        public void Arrive()
+        {
+            isArrived = true;
+            StopGame();
         }
     }
 }

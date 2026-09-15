@@ -150,6 +150,13 @@ namespace _001_Scripts.Map
                 collider.enabled = true;
             }
             else if (collider != null) collider.enabled = false;
+
+            if (cell.Kind == TileKind.Flag)
+            {
+                BoxCollider2D goalTrigger = tile.AddComponent<BoxCollider2D>();
+                goalTrigger.isTrigger = true;
+                tile.AddComponent<GoalPoint>();
+            }
         }
 
         private static Sprite GetFallbackSprite()

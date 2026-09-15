@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2212075718179235349}
   - component: {fileID: 4908630062521898080}
   - component: {fileID: 7318613478341192667}
-  - component: {fileID: 8089812799547978192}
+  - component: {fileID: 1585066384344358666}
   m_Layer: 0
   m_Name: LocalPlayer
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -107,10 +107,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67bd12d7a4fd456cb63abc105d148259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Player.Controller.PlayerController
+  isGrounded: 1
   playerSpeed: 5
   playerJumpPower: 5
   playerMaxHP: 100
   playerHP: 100
+  respawnDelay: 3
   groundCheck: {fileID: 3365737214855711048}
   groundCheckRadius: 0.2
   groundLayer:
@@ -143,8 +145,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!70 &8089812799547978192
-CapsuleCollider2D:
+--- !u!61 &1585066384344358666
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -178,8 +180,17 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &7073032953360580641
 GameObject:
   m_ObjectHideFlags: 0

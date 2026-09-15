@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using _001_Scripts.Manager.Base;
-using _001_Scripts.Player.Controller;
-using _001_Scripts.Player.Interface;
 using School.PositionSync;
 using UnityEngine;
 
@@ -12,7 +10,8 @@ namespace _001_Scripts.Manager
     {
         private Server server;
         private Info[] players = Array.Empty<Info>();
-        private List<Player.Player> player = new List<Player.Player>();
+        private readonly Dictionary<int, Player.Player> playerById = new Dictionary<int, Player.Player>();
+        private readonly List<int> idsToRemove = new List<int>();
         private bool isConnected = true;
 
         [SerializeField] GameObject playerPrefab;
@@ -25,13 +24,7 @@ namespace _001_Scripts.Manager
             server = new Server();
             Debug.Log("Connected");
 
-            for (int i = 0; i < players.Length; i++)
-            {
-                player.Add(
-                    Instantiate(playerPrefab, transform)
-                        .AddComponent<Player.Player>()
-                    );
-            }
+            TryFetchPlayers();
         }
 
         public void SetPosition(Vector2 position)
@@ -55,13 +48,7 @@ namespace _001_Scripts.Manager
         private void Update()
         {
             TryFetchPlayers();
-
-            for (int i = 0; i < players.Length; i++)
-            {
-                player[i - 1].SetPos(
-                    players[i - 1]
-                    );
-            }
+            SyncPlayers();
         }
 
         private void TryFetchPlayers()
@@ -75,6 +62,36 @@ namespace _001_Scripts.Manager
             catch (InvalidOperationException e)
             {
                 HandleConnectionLost(e);
+            }
+        }
+
+        private void SyncPlayers()
+        {
+            idsToRemove.Clear();
+            foreach (int id in playerById.Keys)
+            {
+                idsToRemove.Add(id);
+            }
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                Info info = players[i];
+
+                if (!playerById.TryGetValue(info.Id, out Player.Player remotePlayer))
+                {
+                    remotePlayer = Instantiate(playerPrefab, transform).GetComponent<Player.Player>();
+                    playerById.Add(info.Id, remotePlayer);
+                }
+
+                remotePlayer.SetPos(info);
+                idsToRemove.Remove(info.Id);
+            }
+
+            for (int i = 0; i < idsToRemove.Count; i++)
+            {
+                int id = idsToRemove[i];
+                Destroy(playerById[id].gameObject);
+                playerById.Remove(id);
             }
         }
 

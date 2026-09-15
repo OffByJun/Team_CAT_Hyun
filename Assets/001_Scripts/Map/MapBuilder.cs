@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace _001_Scripts.Map
 {
-    /// <summary>DLL의 World 1-1 그리드를 지정된 타일 프리팹으로 배치합니다.</summary>
     public sealed class MapBuilder : MonoBehaviour
     {
         [Header("Build")]

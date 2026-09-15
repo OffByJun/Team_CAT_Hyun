@@ -64,9 +64,14 @@
                     new Vector2(
                         _moveVec.x *
                         playerSpeed,
-                        _rb.linearVelocity.y);
+                        _rb.linearVelocity.y
+                        );
                 
                 UpdateMoveState();
+                
+                PlayerManager.instance.SetPosition(
+                    GetVector2()
+                    );
             }
 
             public void Move(Vector2 ctx)

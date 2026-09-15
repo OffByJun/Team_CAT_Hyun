@@ -13,11 +13,9 @@ namespace _001_Scripts.Manager
 
         [SerializeField] private Transform spawnPoint;
         
-        
         public String GetTime() => gTime.ToString();
         public int GetCoin() => Coin;
         public int GetScore() => Score;
-
 
         private void Update()
         {

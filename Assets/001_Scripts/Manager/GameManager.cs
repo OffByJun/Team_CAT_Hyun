@@ -13,7 +13,7 @@ namespace _001_Scripts.Manager
 
         [SerializeField] private Transform spawnPoint;
 
-        public String GetTime() => gTime.ToString();
+        public String GetTime() => Mathf.RoundToInt(gTime).ToString();
         public int GetCoin() => Coin;
         public int GetScore() => Score;
         public Transform GetSpawnPoint() => spawnPoint;

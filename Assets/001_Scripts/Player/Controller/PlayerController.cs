@@ -58,6 +58,9 @@ namespace _001_Scripts.Player.Controller
 
         private void Start()
         {
+            InputManager.instance.Movement += Move;
+            InputManager.instance.Jumping += Jump;
+
             PlayerManager.instance.SetPosition(transform.position);
             Debug.Log($"current Pos: {transform.position}");
         }
@@ -128,14 +131,10 @@ namespace _001_Scripts.Player.Controller
             }
         }
 
-        private void OnEnable()
+        private void OnDestroy()
         {
-            InputManager.instance.Movement += Move;
-            InputManager.instance.Jumping += Jump;
-        }
+            if (InputManager.instance == null) return;
 
-        private void OnDisable()
-        {
             InputManager.instance.Movement -= Move;
             InputManager.instance.Jumping -= Jump;
         }

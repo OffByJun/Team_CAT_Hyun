@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _001_Scripts.Manager.Base;
 using _001_Scripts.Player.Controller;
@@ -10,8 +11,9 @@ namespace _001_Scripts.Manager
     public sealed class PlayerManager : SinManagerBase<PlayerManager>
     {
         private Server server;
-        private Info[] players;
-        private List<Player.Player> player;
+        private Info[] players = Array.Empty<Info>();
+        private List<Player.Player> player = new List<Player.Player>();
+        private bool isConnected = true;
 
         [SerializeField] GameObject playerPrefab;
 
@@ -22,9 +24,6 @@ namespace _001_Scripts.Manager
             // LOL
             server = new Server();
             Debug.Log("Connected");
-            
-            players = server.GetPos();
-            Debug.Log($"Current Player: {players.Length}");
 
             for (int i = 0; i < players.Length; i++)
             {
@@ -37,7 +36,17 @@ namespace _001_Scripts.Manager
 
         public void SetPosition(Vector2 position)
         {
-            server.SetPos(new Info(position.x, position.y));
+            if (!isConnected) return;
+
+            try
+            {
+                server.SetPos(new Info(position.x, position.y));
+                // Debug.Log($"Current Player: {position.x}, {position.y}");
+            }
+            catch (InvalidOperationException e)
+            {
+                HandleConnectionLost(e);
+            }
         }
 
         public Info[] GetPlayers()
@@ -45,12 +54,40 @@ namespace _001_Scripts.Manager
 
         private void Update()
         {
+            TryFetchPlayers();
+
             for (int i = 0; i < players.Length; i++)
             {
-                player[i].SetPos(
-                    players[i]
+                player[i - 1].SetPos(
+                    players[i - 1]
                     );
             }
+        }
+
+        private void TryFetchPlayers()
+        {
+            if (!isConnected) return;
+
+            try
+            {
+                players = server.GetPos();
+            }
+            catch (InvalidOperationException e)
+            {
+                HandleConnectionLost(e);
+            }
+        }
+
+        private void HandleConnectionLost(InvalidOperationException e)
+        {
+            Debug.LogError($"서버 연결 끊김: {e.Message}");
+            isConnected = false;
+            server?.Dispose();
+        }
+
+        private void OnDestroy()
+        {
+            server?.Dispose();
         }
     }
 }

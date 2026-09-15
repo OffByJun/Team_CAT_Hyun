@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _001_Scripts.Map
 {
-    public sealed class MapBuilder : MonoBehaviour
+    public sealed class MapManager : MonoBehaviour
     {
         [Header("Build")]
         [SerializeField] private bool buildOnStart = true;

@@ -12,10 +12,11 @@ namespace _001_Scripts.Manager
         private int Score = 0;
 
         [SerializeField] private Transform spawnPoint;
-        
+
         public String GetTime() => gTime.ToString();
         public int GetCoin() => Coin;
         public int GetScore() => Score;
+        public Transform GetSpawnPoint() => spawnPoint;
 
         private void Update()
         {

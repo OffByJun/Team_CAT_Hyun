@@ -11,7 +11,7 @@ namespace _001_Scripts.UI.Component
 
         public void UpdateInfo(int score)
         {
-            text.text = score.ToString();
+            text.text = $"Score: {score.ToString()}";
         }
     }
 }

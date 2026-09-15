@@ -10,7 +10,7 @@ namespace _001_Scripts.UI.Component
         
         public void UpdateInfo(string mapId)
         {
-            worldTxt.text = mapId == null? mapId : " ";
+            worldTxt.text = mapId != null ? mapId : " ";
         }
     }
 }

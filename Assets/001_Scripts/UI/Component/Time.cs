@@ -1,3 +1,4 @@
+using System;
 using _001_Scripts.Manager;
 using TMPro;
 using UnityEngine;
@@ -8,9 +9,9 @@ namespace _001_Scripts.UI.Component
     {
         [SerializeField] private TextMeshProUGUI text;
         
-        public void UpdateInfo(UnityEngine.Time time)
+        public void UpdateInfo(String time)
         {
-            text.text = time.ToString();
+            text.text = $"Time: {time}";
         }
     }
 }

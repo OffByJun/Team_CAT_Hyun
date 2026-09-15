@@ -10,7 +10,7 @@ namespace _001_Scripts.UI.Component
 
         public void UpdateInfo(int coin)
         {
-            text.text = coin.ToString();
+            text.text = $"Coin: {coin.ToString()}";
         }
     }
 }

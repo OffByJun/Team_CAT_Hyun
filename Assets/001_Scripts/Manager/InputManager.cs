@@ -15,14 +15,11 @@ namespace _001_Scripts.Manager
 
         public event Action<Vector2> Movement;
         public event Action Jumping;
-        
+
         public void OnMove(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed)
-            {
-                Vector2 value = ctx.ReadValue<Vector2>();
-                Movement?.Invoke(value);
-            }
+            Vector2 value = ctx.ReadValue<Vector2>();
+            Movement?.Invoke(value);
         }
 
         public void OnJump(InputAction.CallbackContext ctx)

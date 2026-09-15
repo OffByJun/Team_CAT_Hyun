@@ -21,6 +21,10 @@ namespace _001_Scripts.Manager
 
             // LOL
             server = new Server();
+            Debug.Log("Connected");
+            
+            players = server.GetPos();
+            Debug.Log($"Current Player: {players.Length}");
 
             for (int i = 0; i < players.Length; i++)
             {

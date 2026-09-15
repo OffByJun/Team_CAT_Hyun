@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Label text="x 0" name="coin-text"/>
+    <ui:Label text="Lives: 3" name="lives-text"/>
+    <ui:VisualElement name="result-panel" style="flex-grow: 1; height: 1px; width: auto;">
+        <ui:Label text="Result" triple-click-selects-line="false" name="result-text" style="-unity-text-align: upper-center;"/>
+        <ui:Button text="Restart" name="restart-button"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="pause-panel" style="flex-grow: 1;">
+        <ui:Label text="PAUSED" name="pause_text" style="-unity-text-align: upper-center;"/>
+        <ui:Button text="Volume: ON" name="volume-button"/>
+    </ui:VisualElement>
+</ui:UXML>

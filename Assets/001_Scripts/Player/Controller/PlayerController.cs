@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using _001_Scripts.Manager;
 using _001_Scripts.Player.Interface;
@@ -21,6 +22,7 @@ namespace _001_Scripts.Player.Controller
         [SerializeField] private float playerJumpPower = 5.0f;
         [SerializeField] private float playerMaxHP = 100.0f;
         [SerializeField] private float playerHP = 100.0f;
+        [SerializeField] private float respawnDelay = 3.0f;
 
         #endregion
 
@@ -36,6 +38,8 @@ namespace _001_Scripts.Player.Controller
 
         public void TakeDmg(float dmg)
         {
+            if (PlayerState == PlayerState.Dead) return;
+
             playerHP -= dmg;
 
             if (playerHP <= 0)
@@ -61,11 +65,40 @@ namespace _001_Scripts.Player.Controller
         public void Die()
         {
             PlayerState = PlayerState.Dead;
+            _moveVec = Vector2.zero;
+            _rb.linearVelocity = Vector2.zero;
+
             GameManager.instance.StopGame();
+
+            StartCoroutine(RespawnRoutine());
+        }
+
+        private IEnumerator RespawnRoutine()
+        {
+            yield return new WaitForSeconds(respawnDelay);
+            Respawn();
+        }
+
+        public void Respawn()
+        {
+            playerHP = playerMaxHP;
+            PlayerState = PlayerState.Alive;
+
+            Transform spawnPoint = GameManager.instance.GetSpawnPoint();
+            if (spawnPoint != null)
+            {
+                transform.position = spawnPoint.position;
+            }
+
+            _rb.linearVelocity = Vector2.zero;
+
+            GameManager.instance.StartGame();
         }
 
         private void FixedUpdate()
         {
+            if (PlayerState == PlayerState.Dead) return;
+
             _rb.linearVelocity = new Vector2(
                 _moveVec.x * playerSpeed,
                 _rb.linearVelocity.y
@@ -80,10 +113,15 @@ namespace _001_Scripts.Player.Controller
         }
 
         public void Move(Vector2 ctx)
-            => _moveVec = ctx;
+        {
+            if (PlayerState == PlayerState.Dead) return;
+            _moveVec = ctx;
+        }
 
         public void Jump()
         {
+            if (PlayerState == PlayerState.Dead) return;
+
             if (isGrounded)
             {
                 _rb.AddForce(new Vector2(0f, playerJumpPower), ForceMode2D.Impulse);

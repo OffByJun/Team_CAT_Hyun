@@ -822,7 +822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c152cdf90666411eaa558a7c7e3cdcf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Manager.NetworkManager
-  playerPrefab: {fileID: 1517603084518580017, guid: cd47dfd5583bdd240977a9e450234150, type: 3}
+  playerPrefab: {fileID: -8890582544615319619, guid: 8494bafa93b50184bb6c92c4225dd526, type: 3}
   player: {fileID: 1624100778}
 --- !u!1 &1467768784
 GameObject:

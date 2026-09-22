@@ -11,6 +11,15 @@ namespace _001_Scripts.Manager
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
+
+        // Scene을 비동기로 언로드합니다.
+        public void UnloadSceneAsync(string sceneName)
+        {
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == sceneName)
+                return;
+            
+            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
+        }
         
         /// <summary>
         /// Scene을 비동기로 로드합니다.

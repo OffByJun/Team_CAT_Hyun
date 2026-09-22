@@ -1686,6 +1686,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Capsule
       objectReference: {fileID: 0}
+    - target: {fileID: 1517603084518580017, guid: cd47dfd5583bdd240977a9e450234150, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 1585066384344358666, guid: cd47dfd5583bdd240977a9e450234150, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 1

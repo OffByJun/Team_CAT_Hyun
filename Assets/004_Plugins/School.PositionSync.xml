@@ -142,6 +142,27 @@
         <member name="P:School.PositionSync.MapCatalog.World11Underground">
             <summary>World 1-1 지하 보너스 방 그리드. 입장은 지상 파이프 (57,5), 복귀는 (163,4) 발 좌표 기준입니다. 전환 동작은 포함하지 않습니다.</summary>
         </member>
+        <member name="T:School.PositionSync.MoveRules">
+            <summary>
+            서버가 접속한 모든 클라이언트에 같은 값으로 내려주는 이동 규칙. 단위는 맵 한 칸 = 1, 시간은 초.
+            값만 제공하며 이동 계산은 학생 코드가 수행합니다.
+            </summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.Speed">
+            <summary>좌우 이동 속도(칸/초).</summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.Gravity">
+            <summary>아래 방향 중력 가속도의 크기(칸/초²). 양수이며 매 초 세로 속도에서 이만큼 뺍니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.JumpPower">
+            <summary>점프 순간의 위쪽 속도(칸/초). AddForce의 힘이 아니라 세로 속도로 넣습니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.JumpHeight">
+            <summary>이론상 최고 점프 높이(칸) = JumpPower² / (2 × Gravity). 팀 간 비교용입니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.MoveRules.#ctor(System.Single,System.Single,System.Single)">
+            <summary>규칙 값을 만듭니다. 모든 값은 0보다 큰 유한한 숫자여야 합니다.</summary>
+        </member>
         <member name="T:School.PositionSync.Info">
             <summary>플레이어 ID와 위치. 보낼 때 Id는 무시되며 서버가 연결별로 지정합니다.</summary>
         </member>
@@ -172,8 +193,15 @@
         <member name="M:School.PositionSync.Server.#ctor">
             <summary>교사 온라인 서버에 자동 접속합니다. Unity 메인 스레드를 막지 않습니다.</summary>
         </member>
-        <member name="M:School.PositionSync.Server.#ctor(System.String,System.Int32)">
-            <summary>지정한 서버에 자동 접속합니다. 로컬 테스트는 host에 127.0.0.1을 넣으세요.</summary>
+        <member name="M:School.PositionSync.Server.#ctor(System.Action{School.PositionSync.MoveRules})">
+            <summary>교사 온라인 서버에 자동 접속하고, 접속이 끝나면 서버가 정한 이동 규칙으로 onConnected를 한 번 호출합니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.Server.#ctor(System.String,System.Int32,System.Action{School.PositionSync.MoveRules})">
+            <summary>
+            지정한 서버에 자동 접속합니다. 로컬 테스트는 host에 127.0.0.1을 넣으세요.
+            onConnected는 접속 성공 시 한 번 호출되며, Unity에서는 이 객체를 만든 메인 스레드에서 실행됩니다.
+            접속에 실패하거나 먼저 Dispose하면 호출되지 않습니다.
+            </summary>
         </member>
         <member name="M:School.PositionSync.Server.SetPos(School.PositionSync.Info)">
             <summary>내 최신 위치를 저장합니다. 실제 전송은 자동입니다. 접속 중에도 호출할 수 있습니다.</summary>
@@ -228,7 +256,7 @@
             <summary>기본 TCP 포트.</summary>
         </member>
         <member name="F:School.PositionSync.SyncClient.SendIntervalMilliseconds">
-            <summary>위치 전송 간격(밀리초). 50ms = 초당 20회.</summary>
+            <summary>위치 전송 간격(밀리초). 16ms = 초당 약 60회.</summary>
         </member>
         <member name="P:School.PositionSync.SyncClient.Status">
             <summary>현재 연결 상태.</summary>

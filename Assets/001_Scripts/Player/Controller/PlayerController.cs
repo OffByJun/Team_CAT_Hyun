@@ -61,7 +61,7 @@ namespace _001_Scripts.Player.Controller
         {
             playerSpeed = rules.Speed;
             playerJumpPower = rules.JumpPower;
-            _rb.gravityScale = rules.Gravity;
+            Physics2D.gravity = new Vector2(0, -rules.Gravity);
         }
 
         private void Awake()

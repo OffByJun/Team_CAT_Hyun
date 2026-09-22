@@ -1,37 +1,33 @@
-using System;
 using System.Collections.Generic;
 using _001_Scripts.Manager.Base;
 using _001_Scripts.Player.Controller;
 using School.PositionSync;
 using UnityEngine;
-using UnityEngine.Networking.PlayerConnection;
 
 namespace _001_Scripts.Manager
 {
     public class NetworkManager : SinManagerBase<NetworkManager>, IServerHandler
     {
         public Server server;
-        private readonly Dictionary<int, Player.Player> playerById = new Dictionary<int, Player.Player>();
-        private readonly List<int> idsToRemove = new();
 
-        [SerializeField] private GameObject playerPrefab;
+        private readonly Dictionary<int, Player.Player> playerById = new();
+        private readonly List<int> idsToRemove = new();
+        private readonly Queue<Player.Player> playerPool = new();
+
+        [SerializeField] private Player.Player playerPrefab;
         [SerializeField] private PlayerController player;
+
         private int playerId;
 
         private void Awake()
         {
             base.Awake();
+
             server = new Server(this);
             playerId = server.MyId;
 
             Debug.Log("Connected");
-            Debug.Log($"serverId: {server.MyId}");
-        }
-
-        public void OnWorldReset()
-        {
-            Debug.Log("World Reset");
-            player.SetPos(new Vector2(0, 0));
+            Debug.Log($"serverId: {playerId}");
         }
 
         private void OnDestroy()
@@ -49,12 +45,20 @@ namespace _001_Scripts.Manager
             Debug.Log($"접속이 종료되었습니다\n사유: {reason}");
         }
 
+        public void OnWorldReset()
+        {
+            SceneManager.instance.LoadScene("main");
+        }
+
         public void OnMapUpdated(GridMap map)
         {
         }
 
         public void OnPlayersUpdated(Info[] players)
         {
+            if (players == null)
+                return;
+
             idsToRemove.Clear();
 
             foreach (int id in playerById.Keys)
@@ -66,15 +70,18 @@ namespace _001_Scripts.Manager
             {
                 Info info = players[i];
 
-                if (!playerById.TryGetValue(info.Id, out Player.Player player))
-                {
-                    player = Instantiate(playerPrefab, transform)
-                        .GetComponent<Player.Player>();
+                // 나는 이미 씬에 존재하니까 생성 안 함
+                if (info.Id == playerId)
+                    continue;
 
-                    playerById.Add(info.Id, player);
+                if (!playerById.TryGetValue(info.Id, out Player.Player otherPlayer))
+                {
+                    otherPlayer = GetPlayer();
+
+                    playerById.Add(info.Id, otherPlayer);
                 }
 
-                player.SetPos(info);
+                otherPlayer.SetPos(info);
 
                 idsToRemove.Remove(info.Id);
             }
@@ -83,14 +90,41 @@ namespace _001_Scripts.Manager
             {
                 int id = idsToRemove[i];
 
-                Destroy(playerById[id].gameObject);
+                if (!playerById.TryGetValue(id, out Player.Player otherPlayer))
+                    continue;
+
                 playerById.Remove(id);
+
+                ReleasePlayer(otherPlayer);
             }
+        }
+
+        private Player.Player GetPlayer()
+        {
+            if (playerPool.Count > 0)
+            {
+                Player.Player otherPlayer = playerPool.Dequeue();
+
+                otherPlayer.gameObject.SetActive(true);
+
+                return otherPlayer;
+            }
+
+            return Instantiate(playerPrefab, transform);
+        }
+
+        private void ReleasePlayer(Player.Player otherPlayer)
+        {
+            if (otherPlayer == null)
+                return;
+
+            otherPlayer.gameObject.SetActive(false);
+
+            playerPool.Enqueue(otherPlayer);
         }
 
         public void OnMonstersUpdated(Monster[] monsters)
         {
-            
         }
     }
 }

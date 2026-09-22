@@ -25,20 +25,9 @@ namespace _001_Scripts.Manager
             gTime += Time.deltaTime;
         }
         
-        public void StopGame()
-        {
-
-        }
-
-        public void StartGame()
-        {
-
-        }
-
         public void Arrive()
         {
             isArrived = true;
-            StopGame();
         }
     }
 }

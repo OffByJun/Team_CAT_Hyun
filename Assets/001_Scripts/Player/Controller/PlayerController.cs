@@ -4,6 +4,7 @@ using System.IO;
 using _001_Scripts.Manager;
 using _001_Scripts.Player.Interface;
 using _001_Scripts.Player.Type;
+using School.PositionSync;
 using UnityEngine;
 
 namespace _001_Scripts.Player.Controller
@@ -42,10 +43,7 @@ namespace _001_Scripts.Player.Controller
 
             playerHP -= dmg;
 
-            if (playerHP <= 0)
-            {
-                Die();
-            }
+            if (playerHP <= 0) Die();
         }
 
         public void HeadHit(GameObject target)
@@ -56,17 +54,28 @@ namespace _001_Scripts.Player.Controller
         public Vector2 GetVector2()
             => _rb.position;
 
-        private void Awake()
+        public void SetPos(Vector2 pos)
+            => transform.position = pos;
+
+        public void SetRules(MoveRules rules)
         {
-            _rb = GetComponent<Rigidbody2D>();
+            playerSpeed = rules.Speed;
+            playerJumpPower = rules.JumpPower;
+            _rb.gravityScale = rules.Gravity;
         }
+
+        private void Awake()
+            => _rb = GetComponent<Rigidbody2D>();
+
 
         private void Start()
         {
             InputManager.instance.Movement += Move;
             InputManager.instance.Jumping += Jump;
 
-            PlayerManager.instance.SetPosition(transform.position);
+            NetworkManager.instance.server.SetPos(
+                new Info(
+                    transform.position.x, transform.position.y));
             Debug.Log($"current Pos: {transform.position}");
         }
 
@@ -75,8 +84,6 @@ namespace _001_Scripts.Player.Controller
             PlayerState = PlayerState.Dead;
             _moveVec = Vector2.zero;
             _rb.linearVelocity = Vector2.zero;
-
-            GameManager.instance.StopGame();
 
             StartCoroutine(RespawnRoutine());
         }
@@ -99,8 +106,6 @@ namespace _001_Scripts.Player.Controller
             }
 
             _rb.linearVelocity = Vector2.zero;
-
-            GameManager.instance.StartGame();
         }
 
         private void FixedUpdate()
@@ -114,10 +119,6 @@ namespace _001_Scripts.Player.Controller
 
             UpdateMoveState();
             CheckGround();
-
-            PlayerManager.instance.SetPosition(
-                GetVector2()
-            );
         }
 
         public void Move(Vector2 ctx)

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using School.PositionSync;
 using UnityEngine;
 
@@ -22,6 +22,10 @@ namespace _001_Scripts.Map
         [SerializeField] private GameObject flagPrefab;
         [SerializeField] private GameObject castlePrefab;
         [SerializeField] private GameObject coinPrefab;
+
+        [Header("Reset")]
+        [Tooltip("ResetMap() 호출 시 스폰 위치로 되돌릴 플레이어. 비워두면 자동으로 \"Player\" 태그를 찾습니다.")]
+        [SerializeField] private Transform player;
 
         private static Sprite fallbackSprite;
 
@@ -88,6 +92,47 @@ namespace _001_Scripts.Map
                 GameObject child = generatedMapRoot.GetChild(i).gameObject;
                 if (Application.isPlaying) Destroy(child);
                 else DestroyImmediate(child);
+            }
+        }
+
+        /// <summary>
+        /// 맵을 처음 상태(BuildMap 직후 상태)로 되돌리고,
+        /// 플레이어 위치도 스폰 지점으로 리셋합니다.
+        /// 벽돌 파괴, 코인 수집, 물음표 블록 소모 등 플레이 중 맵에 생긴
+        /// 변화는 BuildMap()으로 다시 생성되며 전부 초기화됩니다.
+        /// </summary>
+        [ContextMenu("Reset Map")]
+        public void ResetMap()
+        {
+            BuildMap();
+            ResetPlayerPosition();
+        }
+
+        private void ResetPlayerPosition()
+        {
+            Transform target = player;
+            if (target == null)
+            {
+                GameObject found = GameObject.FindGameObjectWithTag("Player");
+                if (found != null) target = found.transform;
+            }
+            if (target == null)
+            {
+                Debug.LogWarning("ResetMap: 리셋할 플레이어를 찾지 못했습니다. player 필드를 연결해주세요.", this);
+                return;
+            }
+
+            target.position = GetSpawnFeetPosition();
+
+            if (target.TryGetComponent<Rigidbody2D>(out var rb2d))
+            {
+                rb2d.linearVelocity = Vector2.zero;
+                rb2d.angularVelocity = 0f;
+            }
+            if (target.TryGetComponent<Rigidbody>(out var rb3d))
+            {
+                rb3d.linearVelocity = Vector3.zero;
+                rb3d.angularVelocity = Vector3.zero;
             }
         }
 

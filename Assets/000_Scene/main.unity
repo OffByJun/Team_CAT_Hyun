@@ -1688,7 +1688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1517603084518580017, guid: cd47dfd5583bdd240977a9e450234150, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1585066384344358666, guid: cd47dfd5583bdd240977a9e450234150, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y

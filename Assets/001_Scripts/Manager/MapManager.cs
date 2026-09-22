@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using School.PositionSync;
 using UnityEngine;
 
@@ -89,6 +89,17 @@ namespace _001_Scripts.Map
                 if (Application.isPlaying) Destroy(child);
                 else DestroyImmediate(child);
             }
+        }
+
+        /// <summary>
+        /// 맵을 처음 상태(BuildMap 직후 상태)로 되돌립니다.
+        /// 벽돌 파괴, 코인 수집, 물음표 블록 소모 등 플레이 중 맵에 생긴
+        /// 변화는 BuildMap()으로 다시 생성되며 전부 초기화됩니다.
+        /// </summary>
+        [ContextMenu("Reset Map")]
+        public void ResetMap()
+        {
+            BuildMap();
         }
 
         public Vector3 GetSpawnFeetPosition()

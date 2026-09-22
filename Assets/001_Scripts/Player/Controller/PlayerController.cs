@@ -48,6 +48,11 @@ namespace _001_Scripts.Player.Controller
             }
         }
 
+        public void HeadHit(GameObject target)
+        {
+            // 블럭들이 뭐 해야하는지 내가 몰라서 일단 인터페이스만 두림
+        }
+
         public Vector2 GetVector2()
             => _rb.position;
 

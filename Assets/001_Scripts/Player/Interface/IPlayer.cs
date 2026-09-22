@@ -9,6 +9,7 @@ namespace _001_Scripts.Player.Interface
         MoveState MoveState { get; }
         
         void TakeDmg(float dmg);
+        void HeadHit(GameObject target);
         
         Vector2 GetVector2();
     }

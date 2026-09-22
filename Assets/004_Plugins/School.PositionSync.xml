@@ -14,7 +14,7 @@
             <summary>바닥.</summary>
         </member>
         <member name="F:School.PositionSync.TileKind.Brick">
-            <summary>일반 블록. 기본 맵에서는 파괴하지 않습니다.</summary>
+            <summary>일반 블록. 서버에 HitBlock을 보내면 부서져 Empty가 됩니다.</summary>
         </member>
         <member name="F:School.PositionSync.TileKind.Question">
             <summary>물음표 모양 블록. 보상 기능은 포함하지 않습니다.</summary>
@@ -36,6 +36,9 @@
         </member>
         <member name="F:School.PositionSync.TileKind.Coin">
             <summary>지하 방 코인. 수집 처리는 학생이 구현합니다.</summary>
+        </member>
+        <member name="F:School.PositionSync.TileKind.UsedBlock">
+            <summary>쳐서 내용물이 나온 빈 블록. 충돌하며 다시 칠 수 없습니다. 기본 맵에는 없고 server.GetMap()에서만 나타납니다.</summary>
         </member>
         <member name="T:School.PositionSync.BlockContent">
             <summary>원본 맵의 블록 내용물 데이터. 보상·변형 동작은 포함하지 않습니다.</summary>
@@ -124,6 +127,12 @@
         <member name="P:School.PositionSync.GridMap.Cells">
             <summary>비어 있지 않은 셀 목록. 읽기 전용이며 오프라인에서도 동일합니다.</summary>
         </member>
+        <member name="M:School.PositionSync.GridMap.#ctor(School.PositionSync.TileKind[])">
+            <summary>Overworld copy with the server's current tiles (row-major from the bottom row).</summary>
+        </member>
+        <member name="M:School.PositionSync.GridMap.CopyTiles">
+            <summary>Row-major copy of the tiles, index y * Width + x.</summary>
+        </member>
         <member name="M:School.PositionSync.GridMap.GetTile(System.Int32,System.Int32)">
             <summary>셀 종류를 반환합니다. 맵 밖의 좌표는 예외를 발생시킵니다.</summary>
         </member>
@@ -133,6 +142,9 @@
         <member name="P:School.PositionSync.GridMap.SpawnFeet">
             <summary>시작 지점의 발 기준 월드 좌표. 중심 피벗 캐릭터는 반높이를 더하세요.</summary>
         </member>
+        <member name="M:School.PositionSync.Tiles.AfterHit(School.PositionSync.TileKind)">
+            <summary>Result of hitting a block from below; returns the same kind when the hit changes nothing.</summary>
+        </member>
         <member name="T:School.PositionSync.MapCatalog">
             <summary>DLL에 포함된 읽기 전용 맵 카탈로그.</summary>
         </member>
@@ -141,6 +153,52 @@
         </member>
         <member name="P:School.PositionSync.MapCatalog.World11Underground">
             <summary>World 1-1 지하 보너스 방 그리드. 입장은 지상 파이프 (57,5), 복귀는 (163,4) 발 좌표 기준입니다. 전환 동작은 포함하지 않습니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.IServerHandler">
+            <summary>
+            서버 소식을 받는 창구. MonoBehaviour에 구현하고 new Server(this)로 넘기세요.
+            모든 메서드는 Server를 만든 Unity 메인 스레드에서 호출되므로 GameObject를 바로 다뤄도 됩니다.
+            쓰지 않는 메서드도 빈 몸통으로 구현해야 합니다.
+            </summary>
+        </member>
+        <member name="M:School.PositionSync.IServerHandler.OnConnected(School.PositionSync.MoveRules)">
+            <summary>접속이 끝났을 때 한 번. 서버가 정한 스피드·중력·점프력이 옵니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.IServerHandler.OnMapUpdated(School.PositionSync.GridMap)">
+            <summary>맵이 바뀔 때마다(접속 직후 한 번 포함) 모두가 공유하는 현재 맵 전체가 옵니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.IServerHandler.OnPlayersUpdated(School.PositionSync.Info[])">
+            <summary>나를 제외한 상대 플레이어의 최신 위치. 처음 보는 Id는 생성, 사라진 Id는 제거하세요.</summary>
+        </member>
+        <member name="M:School.PositionSync.IServerHandler.OnMonstersUpdated(School.PositionSync.Monster[])">
+            <summary>살아 있는 몬스터의 최신 위치(발 기준). 처음 보는 Id는 생성, 사라진 Id는 제거하세요.</summary>
+        </member>
+        <member name="M:School.PositionSync.IServerHandler.OnWorldReset">
+            <summary>교사가 서버를 리셋했을 때. 맵과 몬스터는 이미 처음 상태로 왔으니 내 캐릭터를 시작 위치로 보내세요.</summary>
+        </member>
+        <member name="M:School.PositionSync.IServerHandler.OnDisconnected(System.String)">
+            <summary>접속에 실패했거나 연결이 끊겼을 때 한 번. 다시 접속하려면 새 Server를 만드세요. Dispose로 직접 끊으면 호출되지 않습니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.MoveRules">
+            <summary>
+            서버가 접속한 모든 클라이언트에 같은 값으로 내려주는 이동 규칙. 단위는 맵 한 칸 = 1, 시간은 초.
+            값만 제공하며 이동 계산은 학생 코드가 수행합니다.
+            </summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.Speed">
+            <summary>좌우 이동 속도(칸/초).</summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.Gravity">
+            <summary>아래 방향 중력 가속도의 크기(칸/초²). 양수이며 매 초 세로 속도에서 이만큼 뺍니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.JumpPower">
+            <summary>점프 순간의 위쪽 속도(칸/초). AddForce의 힘이 아니라 세로 속도로 넣습니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.MoveRules.JumpHeight">
+            <summary>이론상 최고 점프 높이(칸) = JumpPower² / (2 × Gravity). 팀 간 비교용입니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.MoveRules.#ctor(System.Single,System.Single,System.Single)">
+            <summary>규칙 값을 만듭니다. 모든 값은 0보다 큰 유한한 숫자여야 합니다.</summary>
         </member>
         <member name="T:School.PositionSync.Info">
             <summary>플레이어 ID와 위치. 보낼 때 Id는 무시되며 서버가 연결별로 지정합니다.</summary>
@@ -162,31 +220,43 @@
         </member>
         <member name="T:School.PositionSync.Server">
             <summary>
-            위치 동기화 연결 창구. 생성하면 자동 접속하고 SetPos/GetPos로 사용합니다.
+            서버 연결 창구. new Server(this)로 만들면 자동 접속하고, 서버 소식은 IServerHandler의 메서드로 받습니다.
+            내 쪽에서 보내는 것은 SetPos·HitBlock·KillMonster 세 가지입니다.
             이름은 Server지만 서버 프로그램을 실행하는 것이 아닌 클라이언트용 객체입니다.
             </summary>
         </member>
         <member name="F:School.PositionSync.Server.DefaultHost">
             <summary>교사 온라인 서버 주소.</summary>
         </member>
-        <member name="M:School.PositionSync.Server.#ctor">
-            <summary>교사 온라인 서버에 자동 접속합니다. Unity 메인 스레드를 막지 않습니다.</summary>
+        <member name="M:School.PositionSync.Server.#ctor(School.PositionSync.IServerHandler)">
+            <summary>교사 온라인 서버에 자동 접속합니다. 보통 MonoBehaviour에서 new Server(this).</summary>
         </member>
-        <member name="M:School.PositionSync.Server.#ctor(System.String,System.Int32)">
-            <summary>지정한 서버에 자동 접속합니다. 로컬 테스트는 host에 127.0.0.1을 넣으세요.</summary>
-        </member>
-        <member name="M:School.PositionSync.Server.SetPos(School.PositionSync.Info)">
-            <summary>내 최신 위치를 저장합니다. 실제 전송은 자동입니다. 접속 중에도 호출할 수 있습니다.</summary>
-        </member>
-        <member name="M:School.PositionSync.Server.GetPos">
+        <member name="M:School.PositionSync.Server.#ctor(System.String,System.Int32,School.PositionSync.IServerHandler)">
             <summary>
-            나를 제외한 상대 ID·위치 배열을 반환합니다. 연결 중 또는 상대가 없으면 빈 배열입니다.
-            최신 목록에 없는 ID의 오브젝트는 학생 코드에서 제거하세요.
-            연결 실패·단절 시 InvalidOperationException이 발생합니다.
+            지정한 서버에 자동 접속합니다. 로컬 테스트는 host에 127.0.0.1을 넣으세요.
+            서버 소식은 이 객체를 만든 Unity 메인 스레드에서 handler의 메서드로 전달됩니다.
             </summary>
         </member>
+        <member name="P:School.PositionSync.Server.MyId">
+            <summary>서버가 정한 내 플레이어 ID. 접속 전에는 0입니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.Server.SetPos(School.PositionSync.Info)">
+            <summary>
+            내 최신 위치를 저장합니다. 매 프레임 이동 계산 뒤에 부르세요. 실제 전송은 자동입니다.
+            접속 중에도 부를 수 있고, 연결이 끊긴 뒤에는 무시됩니다.
+            </summary>
+        </member>
+        <member name="M:School.PositionSync.Server.HitBlock(System.Int32,System.Int32)">
+            <summary>
+            내 캐릭터가 (x, y) 칸을 아래에서 쳤다고 서버에 알립니다. 벽돌은 부서지고, 물음표·숨은 블록은 UsedBlock이 됩니다.
+            그 칸 위에 서 있던 몬스터는 처치됩니다. 결과는 모두의 OnMapUpdated로 오며, 바뀌지 않는 칸이면 아무 일도 없습니다.
+            </summary>
+        </member>
+        <member name="M:School.PositionSync.Server.KillMonster(System.Int32)">
+            <summary>몬스터를 처치했다고 서버에 알립니다(밟기 등). 판정은 학생 코드가 하며, 이미 없는 ID면 무시됩니다.</summary>
+        </member>
         <member name="M:School.PositionSync.Server.Dispose">
-            <summary>Unity OnDestroy에서 연결을 종료하세요. 재접속은 새 Server를 생성합니다.</summary>
+            <summary>Unity OnDestroy에서 연결을 종료하세요. 이후 핸들러는 호출되지 않습니다. 재접속은 새 Server를 생성합니다.</summary>
         </member>
         <member name="T:School.PositionSync.ConnectionStatus">
             <summary>연결 상태. 재접속할 때는 새 SyncClient를 생성하세요.</summary>
@@ -228,7 +298,7 @@
             <summary>기본 TCP 포트.</summary>
         </member>
         <member name="F:School.PositionSync.SyncClient.SendIntervalMilliseconds">
-            <summary>위치 전송 간격(밀리초). 50ms = 초당 20회.</summary>
+            <summary>위치 전송 간격(밀리초). 16ms = 초당 약 60회.</summary>
         </member>
         <member name="P:School.PositionSync.SyncClient.Status">
             <summary>현재 연결 상태.</summary>
@@ -257,6 +327,33 @@
         </member>
         <member name="M:School.PositionSync.SyncClient.Dispose">
             <summary>통신을 종료합니다. Unity의 OnDestroy 등에서 호출하세요. 여러 번 호출해도 안전합니다.</summary>
+        </member>
+        <member name="M:School.PositionSync.Wire.ReadMapBody(System.IO.BinaryReader,System.Int32@)">
+            <summary>Reads a full overworld map (224 x 15). Returns the server's map version.</summary>
+        </member>
+        <member name="T:School.PositionSync.MonsterKind">
+            <summary>서버가 움직이는 몬스터 종류.</summary>
+        </member>
+        <member name="F:School.PositionSync.MonsterKind.Goomba">
+            <summary>굼바.</summary>
+        </member>
+        <member name="F:School.PositionSync.MonsterKind.Koopa">
+            <summary>엉금엉금. 등껍질 동작은 없으며 밟으면 굼바처럼 사라집니다.</summary>
+        </member>
+        <member name="T:School.PositionSync.Monster">
+            <summary>서버가 움직이는 몬스터 하나의 최신 상태. 위치는 발 기준(아래쪽 중앙) 월드 좌표입니다.</summary>
+        </member>
+        <member name="P:School.PositionSync.Monster.Id">
+            <summary>몬스터 ID. 목록에서 사라지면 처치된 것이므로 오브젝트를 제거하세요.</summary>
+        </member>
+        <member name="P:School.PositionSync.Monster.Kind">
+            <summary>종류.</summary>
+        </member>
+        <member name="P:School.PositionSync.Monster.X">
+            <summary>발 중앙 X.</summary>
+        </member>
+        <member name="P:School.PositionSync.Monster.Y">
+            <summary>발 Y. 서 있는 칸의 윗면입니다.</summary>
         </member>
     </members>
 </doc>

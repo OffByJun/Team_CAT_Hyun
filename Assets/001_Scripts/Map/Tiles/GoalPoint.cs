@@ -2,13 +2,16 @@ using _001_Scripts.Manager;
 using _001_Scripts.Player.Interface;
 using UnityEngine;
 
-public sealed class GoalPoint : GameBehaviour
+namespace _001_Scripts.Map.Tiles
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    public sealed class GoalPoint : GameBehaviour
     {
-        IPlayer player = other.GetComponent<IPlayer>();
-        if (player == null) return;
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            IPlayer player = other.GetComponent<IPlayer>();
+            if (player == null) return;
 
-        GameManager.instance.Arrive();
+            GameManager.instance.Arrive();
+        }
     }
 }

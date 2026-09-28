@@ -16,11 +16,11 @@ namespace _001_Scripts.UI.Panels
 
         private void Update()
         {
-            coin.UpdateInfo(GameManager.instance.GetCoin());
-            score.UpdateInfo(GameManager.instance.GetScore());
-            time.UpdateInfo(GameManager.instance.GetTime());
+            coin.UpdateInfo(UIManager.instance.GetCoin());
+            score.UpdateInfo(UIManager.instance.GetScore());
+            time.UpdateInfo(UIManager.instance.GetTime());
             // world.UpdateInfo(MapManager.instance.GetMapId();
-            goal.UpdateInfo(GameManager.instance.GetIsArrived());
+            goal.UpdateInfo(UIManager.instance.GetIsArrived());
         }
     }
 }

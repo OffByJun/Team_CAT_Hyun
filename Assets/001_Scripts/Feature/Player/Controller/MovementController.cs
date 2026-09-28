@@ -19,6 +19,7 @@ namespace _001_Scripts.Player.Controller
 
         public MoveState MoveState { get; private set; }
         public Vector2 Position => _rb.position;
+        public float VerticalVelocity => _rb.linearVelocity.y;
         private Vector2 _moveVec;
 
         private void Awake()
@@ -28,7 +29,7 @@ namespace _001_Scripts.Player.Controller
         {
             playerSpeed = rules.Speed;
             playerJumpPower = rules.JumpPower;
-            Physics2D.gravity = new Vector2(0, -rules.Gravity);
+            _rb.gravityScale = rules.Gravity / Mathf.Abs(Physics2D.gravity.y);
         }
 
         private void FixedUpdate()
@@ -47,11 +48,12 @@ namespace _001_Scripts.Player.Controller
 
         public void Jump()
         {
-            if (isGrounded)
-            {
-                _rb.AddForce(new Vector2(0f, playerJumpPower), ForceMode2D.Impulse);
-            }
+            if (!isGrounded) return;
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, playerJumpPower);
         }
+
+        public void Bounce(float power)
+            => _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, power);
 
         public void Stop()
         {

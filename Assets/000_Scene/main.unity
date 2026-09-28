@@ -647,6 +647,8 @@ GameObject:
   - component: {fileID: 1410652800}
   - component: {fileID: 1410652802}
   - component: {fileID: 1410652803}
+  - component: {fileID: 1410652804}
+  - component: {fileID: 1410652805}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -822,8 +824,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c152cdf90666411eaa558a7c7e3cdcf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Manager.NetworkManager
-  playerPrefab: {fileID: -8890582544615319619, guid: 8494bafa93b50184bb6c92c4225dd526, type: 3}
   player: {fileID: 1624100778}
+--- !u!114 &1410652804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410652791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564d8589808284e4ba83222153bec17a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Manager.RemotePlayerManager
+  playerPrefab: {fileID: -8890582544615319619, guid: 8494bafa93b50184bb6c92c4225dd526, type: 3}
+--- !u!114 &1410652805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410652791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 248747e471be50642b845eabb2248b41, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Manager.ScoreManager
 --- !u!1 &1467768784
 GameObject:
   m_ObjectHideFlags: 0

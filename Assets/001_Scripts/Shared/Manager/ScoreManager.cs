@@ -13,6 +13,12 @@ namespace _001_Scripts.Manager
         public int GetCoin() => Coin;
         public int GetScore() => Score;
 
+        public void AddCoin(int amount = 1)
+            => Coin += amount;
+
+        public void AddScore(int amount)
+            => Score += amount;
+
         private void Update()
         {
             gTime += Time.deltaTime;

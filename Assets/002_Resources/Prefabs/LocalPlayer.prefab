@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5695268230827555353}
   - component: {fileID: 2212075718179235349}
   - component: {fileID: 4908630062521898080}
+  - component: {fileID: 4908630062521898081}
   - component: {fileID: 7318613478341192667}
   - component: {fileID: 1585066384344358666}
   m_Layer: 0
@@ -107,17 +108,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67bd12d7a4fd456cb63abc105d148259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Player.Controller.PlayerController
-  isGrounded: 1
-  playerSpeed: 5
-  playerJumpPower: 5
   playerMaxHP: 100
   playerHP: 100
   respawnDelay: 3
+  enemyDamage: 1
+  stompBouncePower: 5
+  invincibleDuration: 1
+  coinScore: 100
+--- !u!114 &4908630062521898081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517603084518580017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c370690e0e424ecfb5fa07f0c40e9ada, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_001_Scripts.Player.Controller.MovementController
+  playerSpeed: 5
+  playerJumpPower: 5
+  isGrounded: 1
   groundCheck: {fileID: 3365737214855711048}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!50 &7318613478341192667
 Rigidbody2D:
   serializedVersion: 5

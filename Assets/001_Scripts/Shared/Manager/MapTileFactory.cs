@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using School.PositionSync;
 using UnityEngine;
 
 namespace _001_Scripts.Map
 {
-    public sealed class MapManager : MonoBehaviour
+    public sealed class MapTileFactory : MonoBehaviour
     {
-        [Header("Build")]
-        [SerializeField] private bool buildOnStart = true;
-        [SerializeField] private bool useUndergroundMap;
-        [SerializeField] private bool showHiddenBlocks;
-        [SerializeField] private Transform generatedMapRoot;
-
         [Header("Tile Prefabs")]
         [SerializeField] private GameObject groundPrefab;
         [SerializeField] private GameObject brickPrefab;
@@ -38,94 +32,7 @@ namespace _001_Scripts.Map
             { TileKind.Coin, new Color32(255, 215, 35, 255) }
         };
 
-        private void Start()
-        {
-            if (buildOnStart) BuildMap();
-        }
-
-        [ContextMenu("Build Map")]
-        public void BuildMap()
-        {
-            ClearMap();
-            GridMap map = CurrentMap;
-            Transform root = GetOrCreateRoot();
-
-            foreach (GridCell cell in map.Cells)
-            {
-                if (cell.Kind == TileKind.Empty ||
-                    (cell.Kind == TileKind.HiddenOneUpBlock && !showHiddenBlocks))
-                    continue;
-
-                GameObject prefab = GetPrefab(cell.Kind);
-                if (prefab == null)
-                {
-                    Debug.LogWarning($"{cell.Kind} 프리팹이 지정되지 않았습니다.", this);
-                    continue;
-                }
-
-                PlayerPosition center = map.GetCellCenter(cell.X, cell.Y);
-                GameObject tile = Instantiate(prefab,
-                    new Vector3(center.X, center.Y, center.Z),
-                    Quaternion.identity, root);
-
-                tile.name = $"{cell.Kind}_{cell.X}_{cell.Y}";
-                tile.transform.localScale = Vector3.one * map.CellSize;
-                ConfigureTile(tile, cell);
-            }
-
-            Debug.Log($"맵 배치 완료: {map.Id} v{map.Version}, {map.Cells.Count}개 셀", this);
-        }
-
-        [ContextMenu("Clear Map")]
-        public void ClearMap()
-        {
-            if (generatedMapRoot == null)
-                generatedMapRoot = transform.Find("Generated Map");
-            if (generatedMapRoot == null) return;
-
-            for (int i = generatedMapRoot.childCount - 1; i >= 0; i--)
-            {
-                GameObject child = generatedMapRoot.GetChild(i).gameObject;
-                if (Application.isPlaying) Destroy(child);
-                else DestroyImmediate(child);
-            }
-        }
-
-        /// <summary>
-        /// 맵을 처음 상태(BuildMap 직후 상태)로 되돌립니다.
-        /// 벽돌 파괴, 코인 수집, 물음표 블록 소모 등 플레이 중 맵에 생긴
-        /// 변화는 BuildMap()으로 다시 생성되며 전부 초기화됩니다.
-        /// </summary>
-        [ContextMenu("Reset Map")]
-        public void ResetMap()
-        {
-            BuildMap();
-        }
-
-        public Vector3 GetSpawnFeetPosition()
-        {
-            PlayerPosition spawn = CurrentMap.SpawnFeet;
-            return new Vector3(spawn.X, spawn.Y, spawn.Z);
-        }
-
-        public float GetFallBoundaryY() => CurrentMap.FallBoundaryY;
-
-        private GridMap CurrentMap => useUndergroundMap
-            ? MapCatalog.World11Underground
-            : MapCatalog.Default;
-
-        private Transform GetOrCreateRoot()
-        {
-            if (generatedMapRoot != null) return generatedMapRoot;
-            generatedMapRoot = transform.Find("Generated Map");
-            if (generatedMapRoot != null) return generatedMapRoot;
-
-            generatedMapRoot = new GameObject("Generated Map").transform;
-            generatedMapRoot.SetParent(transform, false);
-            return generatedMapRoot;
-        }
-
-        private GameObject GetPrefab(TileKind kind) => kind switch
+        public GameObject GetPrefab(TileKind kind) => kind switch
         {
             TileKind.Ground => groundPrefab,
             TileKind.Brick => brickPrefab,
@@ -139,7 +46,7 @@ namespace _001_Scripts.Map
             _ => null
         };
 
-        private static void ConfigureTile(GameObject tile, GridCell cell)
+        public static void ConfigureTile(GameObject tile, GridCell cell)
         {
             SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
             if (renderer == null) renderer = tile.AddComponent<SpriteRenderer>();

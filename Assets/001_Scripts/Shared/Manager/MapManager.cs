@@ -14,17 +14,17 @@ namespace _001_Scripts.Map
         [SerializeField] private bool showHiddenBlocks;
         [SerializeField] private Transform generatedMapRoot;
 
-        [Header("Tile Prefabs")]
-        [SerializeField] private GameObject groundPrefab;
-        [SerializeField] private GameObject brickPrefab;
-        [SerializeField] private GameObject questionPrefab;
-        [SerializeField] private GameObject pipePrefab;
-        [SerializeField] private GameObject stairPrefab;
-        [SerializeField] private GameObject hiddenOneUpBlockPrefab;
-        [SerializeField] private GameObject flagPrefab;
-        [SerializeField] private GameObject castlePrefab;
-        [SerializeField] private GameObject coinPrefab;
-        [SerializeField] private GameObject usedBlockPrefab;
+        // 기존 씬/프리팹의 직렬화 참조 보존용. 새 설정은 MapTileFactory에서 합니다.
+        [SerializeField, HideInInspector] private GameObject groundPrefab;
+        [SerializeField, HideInInspector] private GameObject brickPrefab;
+        [SerializeField, HideInInspector] private GameObject questionPrefab;
+        [SerializeField, HideInInspector] private GameObject pipePrefab;
+        [SerializeField, HideInInspector] private GameObject stairPrefab;
+        [SerializeField, HideInInspector] private GameObject hiddenOneUpBlockPrefab;
+        [SerializeField, HideInInspector] private GameObject flagPrefab;
+        [SerializeField, HideInInspector] private GameObject castlePrefab;
+        [SerializeField, HideInInspector] private GameObject coinPrefab;
+        [SerializeField, HideInInspector] private GameObject usedBlockPrefab;
 
         [Header("Server Monster Views")]
         [Tooltip("비워 두면 Resources/MapMonsters의 사각형 프리팹을 불러옵니다.")]
@@ -93,22 +93,25 @@ namespace _001_Scripts.Map
         private readonly HashSet<int> receivedMonsterIds = new();
         private readonly List<int> removedMonsterIds = new();
 
-        private static Sprite fallbackSprite;
+        private MapTileFactory tileFactory;
 
-        private static readonly Dictionary<TileKind, Color> TileColors = new()
+        private void Awake() => EnsureTileFactory();
+
+        private void EnsureTileFactory()
         {
-            { TileKind.Ground, new Color32(181, 91, 42, 255) },
-            { TileKind.Brick, new Color32(203, 92, 47, 255) },
-            { TileKind.Question, new Color32(247, 184, 49, 255) },
-            { TileKind.Pipe, new Color32(57, 181, 74, 255) },
-            { TileKind.Stair, new Color32(210, 140, 76, 255) },
-            { TileKind.HiddenOneUpBlock, new Color32(160, 160, 160, 100) },
-            { TileKind.Flag, new Color32(245, 245, 245, 255) },
-            { TileKind.Castle, new Color32(126, 82, 52, 255) },
-            { TileKind.Coin, new Color32(255, 215, 35, 255) },
-            { TileKind.UsedBlock, new Color32(145, 105, 65, 255) }
-        };
-
+            if (tileFactory == null) tileFactory = GetComponent<MapTileFactory>();
+            if (tileFactory == null) tileFactory = gameObject.AddComponent<MapTileFactory>();
+            tileFactory.SetLegacyPrefab(TileKind.Ground, groundPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Brick, brickPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Question, questionPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Pipe, pipePrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Stair, stairPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.HiddenOneUpBlock, hiddenOneUpBlockPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Flag, flagPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Castle, castlePrefab);
+            tileFactory.SetLegacyPrefab(TileKind.Coin, coinPrefab);
+            tileFactory.SetLegacyPrefab(TileKind.UsedBlock, usedBlockPrefab);
+        }
         private void Start()
         {
             // 콜백이 Start보다 먼저 도착해도 받은 맵을 다시 덮어쓰지 않습니다.
@@ -217,6 +220,7 @@ namespace _001_Scripts.Map
         [ContextMenu("Build Map")]
         public void BuildMap()
         {
+            EnsureTileFactory();
             ClearMap();
             GridMap map = CurrentMap;
             interactions.ApplyMap(map);
@@ -228,33 +232,8 @@ namespace _001_Scripts.Map
                     (cell.Kind == TileKind.Coin && interactions.IsCollected(cell.Id)))
                     continue;
 
-                GameObject prefab = GetPrefab(cell.Kind);
-                if (prefab == null && cell.Kind != TileKind.UsedBlock &&
-                    cell.Kind != TileKind.HiddenOneUpBlock)
-                {
-                    Debug.LogWarning($"{cell.Kind} 프리팹이 지정되지 않았습니다.", this);
-                    continue;
-                }
-
-                PlayerPosition center = map.GetCellCenter(cell.X, cell.Y);
-                GameObject tile;
-                if (prefab != null)
-                    tile = Instantiate(prefab, new Vector3(center.X, center.Y, center.Z),
-                        Quaternion.identity, root);
-                else
-                {
-                    // 기존 씬/프리팹을 수정하지 않아도 UsedBlock의 충돌을 유지합니다.
-                    tile = new GameObject(cell.Kind.ToString());
-                    tile.transform.SetParent(root, false);
-                    tile.transform.position = new Vector3(center.X, center.Y, center.Z);
-                    tile.layer = groundPrefab != null ? groundPrefab.layer : gameObject.layer;
-                }
-
-                tile.name = $"{cell.Kind}_{cell.X}_{cell.Y}";
-                tile.transform.localScale = Vector3.one * map.CellSize;
-                ConfigureTile(tile, cell);
-                if (cell.Kind == TileKind.HiddenOneUpBlock)
-                    tile.GetComponent<SpriteRenderer>().enabled = showHiddenBlocks;
+                GameObject tile = tileFactory.CreateTile(map, cell, root, showHiddenBlocks);
+                if (tile == null) continue;
                 if (cell.Kind == TileKind.Brick || cell.Kind == TileKind.Question ||
                     cell.Kind == TileKind.HiddenOneUpBlock || cell.Kind == TileKind.Coin)
                 {
@@ -316,79 +295,5 @@ namespace _001_Scripts.Map
             return generatedMapRoot;
         }
 
-        private GameObject GetPrefab(TileKind kind) => kind switch
-        {
-            TileKind.Ground => groundPrefab,
-            TileKind.Brick => brickPrefab,
-            TileKind.Question => questionPrefab,
-            TileKind.Pipe => pipePrefab,
-            TileKind.Stair => stairPrefab,
-            TileKind.HiddenOneUpBlock => hiddenOneUpBlockPrefab,
-            TileKind.Flag => flagPrefab,
-            TileKind.Castle => castlePrefab,
-            TileKind.Coin => coinPrefab,
-            TileKind.UsedBlock => usedBlockPrefab,
-            _ => null
-        };
-
-        private static void ConfigureTile(GameObject tile, GridCell cell)
-        {
-            SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
-            if (renderer == null) renderer = tile.AddComponent<SpriteRenderer>();
-            if (renderer.sprite == null) renderer.sprite = GetFallbackSprite();
-            renderer.color = TileColors.TryGetValue(cell.Kind, out Color color)
-                ? color : Color.magenta;
-
-            if (cell.Kind == TileKind.Coin)
-            {
-                tile.transform.localScale *= 0.45f;
-                renderer.sortingOrder = 2;
-            }
-            else if (!cell.IsSolid) renderer.sortingOrder = -1;
-
-            Collider2D collider = tile.GetComponent<Collider2D>();
-            if (cell.IsSolid)
-            {
-                if (collider == null) collider = tile.AddComponent<BoxCollider2D>();
-                collider.isTrigger = false;
-                collider.enabled = true;
-            }
-            else if (collider != null) collider.enabled = false;
-
-            if (cell.Kind == TileKind.Coin || cell.Kind == TileKind.HiddenOneUpBlock)
-            {
-                // 수집/탐지 트리거가 Ground 레이어의 접지 검사에 잡히지 않게 합니다.
-                tile.layer = 0;
-                if (collider == null) collider = tile.AddComponent<BoxCollider2D>();
-                collider.enabled = true;
-                collider.isTrigger = true;
-            }
-
-            if (cell.Kind == TileKind.Flag)
-            {
-                BoxCollider2D goalTrigger = tile.GetComponent<BoxCollider2D>();
-                if (goalTrigger == null) goalTrigger = tile.AddComponent<BoxCollider2D>();
-                goalTrigger.enabled = true;
-                goalTrigger.isTrigger = true;
-                if (tile.GetComponent<GoalPoint>() == null) tile.AddComponent<GoalPoint>();
-            }
-        }
-
-        private static Sprite GetFallbackSprite()
-        {
-            if (fallbackSprite != null) return fallbackSprite;
-            Texture2D texture = new(1, 1, TextureFormat.RGBA32, false)
-            {
-                name = "Map Tile Fallback Texture",
-                filterMode = FilterMode.Point,
-                wrapMode = TextureWrapMode.Clamp
-            };
-            texture.SetPixel(0, 0, Color.white);
-            texture.Apply();
-            fallbackSprite = Sprite.Create(texture, new Rect(0, 0, 1, 1),
-                new Vector2(0.5f, 0.5f), 1f);
-            fallbackSprite.name = "Map Tile Fallback Sprite";
-            return fallbackSprite;
-        }
     }
 }
